@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My first three.js app</title>
+    <style>
+        body { margin: 0; }
+    </style>
+</head>
+<body>
+<!-- Three.js library -->
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="three.js"></script>
+<!-- GLTFLoader.js source -->
+<script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+<script>
+    const renderer = new THREE.WebGLRenderer();
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+    const scene = new THREE.Scene();
+    let Mesh;
+    let light;
+
+    function init() {
+        scene.background = new THREE.Color('black');
+        camera.position.set(0, 10, 20);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+    }
+
+    function setLight() {
+        ambientLight = new THREE.AmbientLight(0xffffff,0.3); // soft white light
+        scene.add(ambientLight);
+
+        pointLight = new THREE.PointLight(0xffffff, 0.4)
+        pointLight.position.x = -2
+        pointLight.position.y = 30
+        pointLight.position.z = 0
+        scene.add(pointLight);
+
+        pointLight = new THREE.PointLight(0xffffff, 10)
+        pointLight.position.x = 2
+        pointLight.position.y = 3
+        pointLight.position.z = 4
+        scene.add(pointLight);
+    }
+
+    function loadGLTF() {
+        let balloonLoader = new THREE.GLTFLoader();
+
+        balloonLoader.load('./model/home_sunda_final.gltf', (gltf) => {
+            Mesh = gltf.scene;
+            Mesh.scale.set(0.2,0.2,0.2);
+            scene.add(Mesh);
+            Mesh.position.x = 0;
+            Mesh.position.y = 9;
+            Mesh.position.z = 15;
+        });
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        if (Mesh && Mesh.rotation) {
+            Mesh.rotation.y -= 0.005;
+        }
+        renderer.render(scene, camera);
+    }
+
+    init();
+    setLight();
+    loadGLTF();
+    animate();
+</script>
+</body>
+</html>
